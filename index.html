@@ -3,20 +3,41 @@
   <head>
     <meta charset="utf-8">
     <title>Pokemon</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 
     <script>
       $(document).ready(function() {
+        // display all pokemon images
         var str = "";
         for (var i = 1; i <= 151; i++) {
-          str += "<img src='https://pokeapi.co/media/img/"+i+".png'>";
+          str += "<img src='https://pokeapi.co/media/img/"+i+".png' poke_id='"+i+"'>";
         }
-        $('body').html(str);
+        $('.pokemon-imgs').html(str);
+
+        // display clicked pokemon in Pokedex
+        $('img').click(function() {
+          var poke_id = $(this).attr('poke_id');
+          var pokedex_str = "";
+          $.get("https://pokeapi.co/api/v2/pokemon/"+ poke_id +"/", function(res) {
+            // display on Pokedex
+            console.log(res);
+            pokedex_str += "<h1>"+res['name']+"</h1>";
+            pokedex_str += "<img src='https://pokeapi.co/media/img/"+poke_id+".png'>";
+            pokedex_str += "<h4>ID</h4>"+ poke_id;
+            pokedex_str += "<h4>Weight</h4>"+res['weight'];
+            pokedex_str += "<h4>Height</h4>"+res['height'];
+            $('.pokedex').html(pokedex_str);
+          }, "json");
+        })
       })
     </script>
-
   </head>
+
   <body>
-    
+    <h1>What's This Pokemon?</h1>
+    <div class="pokedex"><h3>Pokedex</h3></div>
+    <div class="pokemon-imgs"></div>
+
   </body>
 </html>
